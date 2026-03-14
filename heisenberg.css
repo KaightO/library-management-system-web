@@ -1,0 +1,17 @@
+.sidebar {
+    position: fixed;
+    top:0;left: 0;
+    width: 240px;
+    height: 100vh;
+    background: beige;
+    padding-left: 1%;
+    padding-top: 1%;
+}
+    .topbar{
+    padding-left: 280px;
+}
+    .search{
+        position:fixed;
+        right:0;
+        padding-right: 1%;
+    }
