@@ -153,23 +153,23 @@ if ($editId !== '') {
 <body>
   <div class="app">
     <aside class="sidebar">
-      <div class="brand">
+      <div class="logo">
         <img src="pic.jpg" alt="Library logo">
         <div>
-          <div class="title">Library of Alexandria</div>
+          <b>Library of Alexandria</b>
           <div class="subtitle">Catalogue</div>
         </div>
       </div>
 
-      <nav class="nav" aria-label="Primary">
-        <div class="nav-section">Overview</div>
+      <nav class="nav">
+        <div class="nav-section">OVERVIEW</div>
         <a href="library.php">Dashboard</a>
 
-        <div class="nav-section">Catalogue</div>
+        <div class="nav-section">CATALOGUE</div>
         <a class="active" href="book.php">Books</a>
         <a href="addbook.php">Add Book</a>
 
-        <div class="nav-section">Members</div>
+        <div class="nav-section">MEMBERS</div>
         <a href="members.php">Members</a>
       </nav>
 
@@ -185,7 +185,7 @@ if ($editId !== '') {
         <h1>Books</h1>
         <div class="actions">
           <form class="search" action="book.php" method="get">
-            <input type="text" name="q" placeholder="Search books..." aria-label="Search books" value="<?php echo htmlspecialchars($q); ?>">
+            <input type="text" name="q" placeholder="Search books..." value="<?php echo htmlspecialchars($q); ?>">
           </form>
           <a class="btn primary" href="addbook.php">+ Add Book</a>
         </div>
@@ -194,7 +194,7 @@ if ($editId !== '') {
       <section class="grid">
         <div class="card span-12">
           <h2>Catalogue list</h2>
-          <div class="table-wrap" role="region" aria-label="Books table" tabindex="0">
+          <div class="table-wrap">
             <table>
               <thead>
                 <tr>
@@ -237,7 +237,7 @@ if ($editId !== '') {
           <form action="book.php" method="post" autocomplete="on">
             <input type="hidden" name="action" value="borrow_book">
             <div class="form-grid">
-              <div class="field half">
+              <div class="field">
                 <label for="borrow_book_id">Book ID</label>
                 <input id="borrow_book_id" name="book_id" placeholder="BK-00001" required>
               </div>
@@ -255,46 +255,46 @@ if ($editId !== '') {
             <input type="hidden" name="action" value="update_book">
             <input type="hidden" name="id" value="<?php echo htmlspecialchars($editBook['id']); ?>">
             <div class="form-grid">
-              <div class="field third">
+              <div class="field">
                 <label>Book ID</label>
                 <input value="<?php echo htmlspecialchars($editBook['id']); ?>" readonly>
               </div>
-              <div class="field third">
+              <div class="field">
                 <label for="isbn">ISBN</label>
                 <input id="isbn" name="isbn" value="<?php echo htmlspecialchars($editBook['isbn']); ?>">
               </div>
-              <div class="field third">
+              <div class="field">
                 <label for="year">Year</label>
                 <input id="year" name="year" type="number" min="0" value="<?php echo htmlspecialchars((string)$editBook['publish_year']); ?>">
               </div>
 
-              <div class="field half">
+              <div class="field">
                 <label for="title">Title</label>
                 <input id="title" name="title" value="<?php echo htmlspecialchars($editBook['title']); ?>" required>
               </div>
-              <div class="field half">
+              <div class="field">
                 <label for="author">Author</label>
                 <input id="author" name="author" value="<?php echo htmlspecialchars($editBook['author']); ?>" required>
               </div>
 
-              <div class="field half">
+              <div class="field">
                 <label for="category">Category</label>
                 <input id="category" name="category" value="<?php echo htmlspecialchars($editBook['category']); ?>">
               </div>
-              <div class="field half">
+              <div class="field">
                 <label for="shelf">Shelf</label>
                 <input id="shelf" name="shelf" value="<?php echo htmlspecialchars($editBook['shelf']); ?>">
               </div>
 
-              <div class="field third">
+              <div class="field">
                 <label for="copies_total">Total copies</label>
                 <input id="copies_total" name="copies_total" type="number" min="1" value="<?php echo (int)$editBook['copies_total']; ?>" required>
               </div>
-              <div class="field third">
+              <div class="field">
                 <label for="copies_available">Available copies</label>
                 <input id="copies_available" name="copies_available" type="number" min="0" value="<?php echo (int)$editBook['copies_available']; ?>" required>
               </div>
-              <div class="field third">
+              <div class="field">
                 <label for="language">Language</label>
                 <input id="language" name="language" value="<?php echo htmlspecialchars($editBook['language']); ?>">
               </div>

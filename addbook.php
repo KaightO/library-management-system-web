@@ -74,24 +74,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
   <div class="app">
     <aside class="sidebar">
-      <div class="brand">
+      <div class="logo">
         <img src="pic.jpg" alt="Library logo">
         <div>
-          <div class="title">Library of Alexandria</div>
+          <b>Library of Alexandria</b>
           <div class="subtitle">Catalogue</div>
         </div>
       </div>
 
-      <nav class="nav" aria-label="Primary">
-        <div class="nav-section">Overview</div>
+      <nav class="nav">
+        <div class="nav-section">OVERVIEW</div>
         <a href="library.php">Dashboard</a>
 
-        <div class="nav-section">Catalogue</div>
+        <div class="nav-section">CATALOGUE</div>
         <a href="book.php">Books</a>
         <a class="active" href="addbook.php">Add Book</a>
         <a href="returnbook.php">Return Book</a>
 
-        <div class="nav-section">Members</div>
+        <div class="nav-section">MEMBERS</div>
         <a href="members.php">Members</a>
       </nav>
 
@@ -115,29 +115,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <h2>Book details</h2>
           <form action="addbook.php" method="post" autocomplete="on">
             <div class="form-grid">
-              <div class="field third">
+              <div class="field">
                 <label for="book_id">Book ID</label>
                 <input id="book_id" name="book_id" placeholder="BK-00001" required>
               </div>
-              <div class="field third">
+              <div class="field">
                 <label for="isbn">ISBN</label>
                 <input id="isbn" name="isbn" placeholder="9780132350884">
               </div>
-              <div class="field third">
+              <div class="field">
                 <label for="year">Year</label>
                 <input id="year" name="year" type="number" placeholder="2008" min="0">
               </div>
 
-              <div class="field half">
+              <div class="field">
                 <label for="title">Title</label>
                 <input id="title" name="title" placeholder="Clean Code" required>
               </div>
-              <div class="field half">
+              <div class="field">
                 <label for="author">Author</label>
                 <input id="author" name="author" placeholder="Robert C. Martin" required>
               </div>
 
-              <div class="field half">
+              <div class="field">
                 <label for="category">Category</label>
                 <select id="category" name="category">
                   <option value="">Select category</option>
@@ -148,20 +148,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   <option>History</option>
                 </select>
               </div>
-              <div class="field half">
+              <div class="field">
                 <label>Status</label>
                 <input value="Auto (based on available copies)" readonly>
               </div>
 
-              <div class="field third">
+              <div class="field">
                 <label for="copies">Copies</label>
                 <input id="copies" name="copies" type="number" value="1" min="1" required>
               </div>
-              <div class="field third">
+              <div class="field">
                 <label for="shelf">Shelf</label>
                 <input id="shelf" name="shelf" placeholder="A-3">
               </div>
-              <div class="field third">
+              <div class="field">
                 <label for="language">Language</label>
                 <input id="language" name="language" placeholder="English">
               </div>

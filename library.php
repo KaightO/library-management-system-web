@@ -42,30 +42,30 @@ if ($res2) {
 <body>
   <div class="app">
     <aside class="sidebar">
-      <div class="brand">
-        <img src="pic.jpg" alt="Library logo">
+      <div class="logo">
+        <img src="pic.jpg" alt="Not found">
         <div>
-          <div class="title">Library of Alexandria</div>
+            <b>Library of Alexandria</b>  
           <div class="subtitle">Management Dashboard</div>
         </div>
       </div>
 
       <nav class="nav">
-        <div class="nav-section">Overview</div>
+        <div class="nav-section">OVERVIEW</div>
         <a class="active" href="library.php">Dashboard</a>
 
-        <div class="nav-section">Catalogue</div>
+        <div class="nav-section">CATALOGUE</div>
         <a href="book.php">Books</a>
         <a href="addbook.php">Add Book</a>
         <a href="returnbook.php">Return Book</a>
 
-        <div class="nav-section">Members</div>
+        <div class="nav-section">MEMBERS</div>
         <a href="members.php">Members</a>
       </nav>
 
       <div class="sidebar-footer">
         <div class="role">Signed in as</div>
-        <div class="name">Admin User</div>
+        <b>Admin User</b>
         <div class="role">Role: Librarian</div>
       </div>
     </aside>
@@ -75,13 +75,13 @@ if ($res2) {
         <h1>Dashboard</h1>
         <div class="actions">
           <form class="search" action="book.php" method="get">
-            <input type="text" name="q" placeholder="Search by title, author, ISBN..." aria-label="Search books">
+            <input type="text" name="q" placeholder="Search by title, author...">
           </form>
           <a class="btn primary" href="addbook.php">+ Add Book</a>
         </div>
       </header>
 
-      <section class="grid" aria-label="Summary">
+      <section class="grid">
         <div class="card span-3">
           <h2>Total Books</h2>
           <div class="stat">

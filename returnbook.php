@@ -72,24 +72,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
   <div class="app">
     <aside class="sidebar">
-      <div class="brand">
+      <div class="logo">
         <img src="pic.jpg" alt="Library logo">
         <div>
-          <div class="title">Library of Alexandria</div>
+          <b>Library of Alexandria</b>
           <div class="subtitle">Loans</div>
         </div>
       </div>
 
-      <nav class="nav" aria-label="Primary">
-        <div class="nav-section">Overview</div>
+      <nav class="nav">
+        <div class="nav-section">OVERVIEW</div>
         <a href="library.php">Dashboard</a>
 
-        <div class="nav-section">Catalogue</div>
+        <div class="nav-section">CATALOGUE</div>
         <a href="book.php">Books</a>
         <a href="addbook.php">Add Book</a>
         <a class="active" href="returnbook.php">Return Book</a>
 
-        <div class="nav-section">Members</div>
+        <div class="nav-section">MEMBERS</div>
         <a href="members.php">Members</a>
       </nav>
 
@@ -113,20 +113,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <h2>Return form</h2>
           <form action="returnbook.php" method="post" autocomplete="on">
             <div class="form-grid">
-              <div class="field half">
+              <div class="field">
                 <label for="return_book_id">Book ID</label>
                 <input id="return_book_id" name="book_id" placeholder="BK-00412" value="<?php echo htmlspecialchars($bookId); ?>" required>
               </div>
-              <div class="field half">
+              <div class="field">
                 <label for="member_id">Member ID</label>
                 <input id="member_id" name="member_id" placeholder="MB-0017" value="<?php echo htmlspecialchars($memberId); ?>">
               </div>
 
-              <div class="field half">
+              <div class="field">
                 <label for="return_date">Return Date</label>
                 <input id="return_date" name="return_date" type="date" value="<?php echo htmlspecialchars($returnDate); ?>">
               </div>
-              <div class="field half">
+              <div class="field">
                 <label for="condition">Condition</label>
                 <select id="condition" name="condition">
                   <option <?php if ($condition === 'Good') echo 'selected'; ?>>Good</option>

@@ -128,24 +128,24 @@ if ($editId !== '') {
 <body>
   <div class="app">
     <aside class="sidebar">
-      <div class="brand">
+      <div class="logo">
         <img src="pic.jpg" alt="Library logo">
         <div>
-          <div class="title">Library of Alexandria</div>
+          <b>Library of Alexandria</b>
           <div class="subtitle">People</div>
         </div>
       </div>
 
-      <nav class="nav" aria-label="Primary">
-        <div class="nav-section">Overview</div>
+      <nav class="nav">
+        <div class="nav-section">OVERVIEW</div>
         <a href="library.php">Dashboard</a>
 
-        <div class="nav-section">Catalogue</div>
+        <div class="nav-section">CATALOGUE</div>
         <a href="book.php">Books</a>
         <a href="addbook.php">Add Book</a>
         <a href="returnbook.php">Return Book</a>
 
-        <div class="nav-section">Members</div>
+        <div class="nav-section">MEMBERS</div>
         <a class="active" href="members.php">Members</a>
       </nav>
 
@@ -161,7 +161,7 @@ if ($editId !== '') {
         <h1>Members</h1>
         <div class="actions">
           <form class="search" action="members.php" method="get">
-            <input type="text" name="q" placeholder="Search members..." aria-label="Search members" value="<?php echo htmlspecialchars($q); ?>">
+            <input type="text" name="q" placeholder="Search members..." value="<?php echo htmlspecialchars($q); ?>">
           </form>
         </div>
       </header>
@@ -169,7 +169,7 @@ if ($editId !== '') {
       <section class="grid">
         <div class="card span-12">
           <h2>Member directory</h2>
-          <div class="table-wrap" role="region" aria-label="Members table" tabindex="0">
+          <div class="table-wrap">
             <table>
               <thead>
                 <tr>
@@ -212,11 +212,11 @@ if ($editId !== '') {
           <form action="members.php" method="post" autocomplete="on">
             <input type="hidden" name="action" value="create_member">
             <div class="form-grid">
-              <div class="field half">
+              <div class="field">
                 <label for="member_id">Member ID</label>
                 <input id="member_id" name="id" placeholder="MB-0001" required>
               </div>
-              <div class="field half">
+              <div class="field">
                 <label for="member_status">Status</label>
                 <select id="member_status" name="status">
                   <option>Active</option>
@@ -228,11 +228,11 @@ if ($editId !== '') {
                 <label for="member_name">Name</label>
                 <input id="member_name" name="name" placeholder="Full name" required>
               </div>
-              <div class="field half">
+              <div class="field">
                 <label for="member_phone">Phone</label>
                 <input id="member_phone" name="phone" placeholder="+1 555 0000">
               </div>
-              <div class="field half">
+              <div class="field">
                 <label for="member_email">Email</label>
                 <input id="member_email" name="email" placeholder="name@example.com">
               </div>
@@ -250,11 +250,11 @@ if ($editId !== '') {
               <input type="hidden" name="action" value="update_member">
               <input type="hidden" name="id" value="<?php echo htmlspecialchars($editMember['id']); ?>">
               <div class="form-grid">
-                <div class="field half">
+                <div class="field">
                   <label>Member ID</label>
                   <input value="<?php echo htmlspecialchars($editMember['id']); ?>" readonly>
                 </div>
-                <div class="field half">
+                <div class="field">
                   <label for="edit_status">Status</label>
                   <select id="edit_status" name="status">
                     <?php foreach (['Active','Pending','Blocked'] as $s): ?>
@@ -266,11 +266,11 @@ if ($editId !== '') {
                   <label for="edit_name">Name</label>
                   <input id="edit_name" name="name" value="<?php echo htmlspecialchars($editMember['name']); ?>" required>
                 </div>
-                <div class="field half">
+                <div class="field">
                   <label for="edit_phone">Phone</label>
                   <input id="edit_phone" name="phone" value="<?php echo htmlspecialchars($editMember['phone']); ?>">
                 </div>
-                <div class="field half">
+                <div class="field">
                   <label for="edit_email">Email</label>
                   <input id="edit_email" name="email" value="<?php echo htmlspecialchars($editMember['email']); ?>">
                 </div>
