@@ -1,67 +1,30 @@
 <?php
-// simple PHP + MySQL dashboard
+require_once 'auth_check.php';
 require_once 'db_connect.php';
 
-$totalBooks = 0;
-$availableCopies = 0;
-$issuedCopies = 0;
-$totalMembers = 0;
+$pageTitle  = 'Dashboard';
+$activePage = 'dashboard';
+
+// Aggregate statistics
+$totalBooks = $availableCopies = $issuedCopies = $totalMembers = $activeBorrows = 0;
 
 $res = $conn->query('SELECT COUNT(*) AS c, COALESCE(SUM(copies_available),0) AS avail, COALESCE(SUM(copies_total),0) AS total FROM books');
 if ($res) {
-    $row = $res->fetch_assoc();
-    $totalBooks = (int)$row['c'];
+    $row             = $res->fetch_assoc();
+    $totalBooks      = (int)$row['c'];
     $availableCopies = (int)$row['avail'];
-    $totalCopies = (int)$row['total'];
-    $issuedCopies = max(0, $totalCopies - $availableCopies);
+    $issuedCopies    = max(0, (int)$row['total'] - $availableCopies);
 }
 
-$res2 = $conn->query('SELECT COUNT(*) AS c FROM members');
-if ($res2) {
-    $row2 = $res2->fetch_assoc();
-    $totalMembers = (int)$row2['c'];
-}
+$res = $conn->query('SELECT COUNT(*) AS c FROM members');
+if ($res) $totalMembers = (int)$res->fetch_assoc()['c'];
+
+$res = $conn->query("SELECT COUNT(*) AS c FROM borrows WHERE status = 'Borrowed'");
+if ($res) $activeBorrows = (int)$res->fetch_assoc()['c'];
+
+require_once 'header.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Library of Alexandria</title>
-    <link rel="stylesheet" href="heisenberg.css">
-</head>
-<body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="logo">
-        <img src="pic.jpg" alt="Not found">
-        <div>
-            <b>Library of Alexandria</b>  
-          <div class="subtitle">Management Dashboard</div>
-        </div>
-      </div>
 
-      <nav class="nav">
-        <div class="nav-section">OVERVIEW</div>
-        <a class="active" href="library.php">Dashboard</a>
-
-        <div class="nav-section">CATALOGUE</div>
-        <a href="book.php">Books</a>
-        <a href="addbook.php">Add Book</a>
-        <a href="returnbook.php">Return Book</a>
-
-        <div class="nav-section">MEMBERS</div>
-        <a href="members.php">Members</a>
-      </nav>
-
-      <div class="sidebar-footer">
-        <div class="role">Signed in as</div>
-        <b>Admin User</b>
-        <div class="role">Role: Librarian</div>
-      </div>
-    </aside>
-
-    <main class="content">
       <header class="topbar">
         <h1>Dashboard</h1>
         <div class="actions">
@@ -76,34 +39,34 @@ if ($res2) {
         <div class="card span-3">
           <h2>Total Books</h2>
           <div class="stat">
-            <div class="value"><?php echo (int)$totalBooks; ?></div>
+            <div class="value"><?php echo $totalBooks; ?></div>
             <div class="hint">catalogued</div>
           </div>
         </div>
         <div class="card span-3">
           <h2>Available</h2>
           <div class="stat">
-            <div class="value"><?php echo (int)$availableCopies; ?></div>
-            <div class="hint">copies ready to issue</div>
+            <div class="value"><?php echo $availableCopies; ?></div>
+            <div class="hint">copies on shelf</div>
           </div>
         </div>
         <div class="card span-3">
-          <h2>Issued</h2>
+          <h2>Borrowed</h2>
           <div class="stat">
-            <div class="value"><?php echo (int)$issuedCopies; ?></div>
-            <div class="hint">copies currently out</div>
+            <div class="value"><?php echo $activeBorrows; ?></div>
+            <div class="hint">active borrows</div>
           </div>
         </div>
         <div class="card span-3">
           <h2>Members</h2>
           <div class="stat">
-            <div class="value"><?php echo (int)$totalMembers; ?></div>
+            <div class="value"><?php echo $totalMembers; ?></div>
             <div class="hint">in directory</div>
           </div>
         </div>
 
         <div class="card span-6" style="grid-column: 4 / span 6;">
-          <h2>Quick actions</h2>
+          <h2>Quick Actions</h2>
           <a class="btn primary" href="addbook.php" style="width:100%">Add a new book</a>
           <div style="height:10px"></div>
           <a class="btn" href="book.php" style="width:100%">View / edit catalogue</a>
@@ -111,7 +74,5 @@ if ($res2) {
           <a class="btn" href="returnbook.php" style="width:100%">Return a book</a>
         </div>
       </section>
-    </main>
-  </div>
-</body>
-</html>
+
+<?php require_once 'footer.php'; ?>

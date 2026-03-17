@@ -28,7 +28,30 @@ CREATE TABLE IF NOT EXISTS members (
   PRIMARY KEY (id)
 );
 
--- Optional seed data
+CREATE TABLE IF NOT EXISTS admins (
+  id            INT          AUTO_INCREMENT PRIMARY KEY,
+  username      VARCHAR(50)  NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  name          VARCHAR(255) NOT NULL,
+  created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS borrows (
+  id             INT          AUTO_INCREMENT PRIMARY KEY,
+  book_id        VARCHAR(32)  NOT NULL,
+  member_id      VARCHAR(32)  NOT NULL,
+  borrow_date    DATE         NOT NULL,
+  due_date       DATE         NULL,
+  return_date    DATE         NULL,
+  book_condition VARCHAR(20)  NULL,
+  status         VARCHAR(20)  NOT NULL DEFAULT 'Borrowed',
+  notes          TEXT         NULL,
+  created_at     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (book_id)   REFERENCES books(id),
+  FOREIGN KEY (member_id) REFERENCES members(id)
+);
+
+-- Seed data: sample books
 INSERT INTO books (id, isbn, title, author, category, publish_year, copies_total, copies_available, shelf, language)
 VALUES
   ('BK-00001', '9780132350884', 'Clean Code', 'Robert C. Martin', 'Technology', 2008, 5, 5, 'A-3', 'English'),
@@ -36,8 +59,14 @@ VALUES
   ('BK-00412', NULL, '1984', 'George Orwell', 'Fiction', 1949, 3, 2, 'C-2', 'English')
 ON DUPLICATE KEY UPDATE id = id;
 
+-- Seed data: sample members
 INSERT INTO members (id, name, status, phone, email)
 VALUES
   ('MB-0017', 'A. Member', 'Active', '+1 555 0789', 'member@library.test'),
   ('MB-0031', 'Jordan Reader', 'Pending', '+1 555 0990', 'jordan@library.test')
+ON DUPLICATE KEY UPDATE id = id;
+
+-- Seed data: default admin (username: admin, password: admin123)
+INSERT INTO admins (username, password_hash, name)
+VALUES ('admin', '$2y$12$RVDOkTvnoEkS8DFwSVxtXuYEJBQsfLX6j.QvvNPBRWL8w4kxFITKK', 'Admin User')
 ON DUPLICATE KEY UPDATE id = id;

@@ -1,108 +1,86 @@
 <?php
-// simple PHP + MySQL return (no loans table, just updates copies_available)
-
+require_once 'auth_check.php';
 require_once 'db_connect.php';
 
-$message = '';
-$bookId = '';
-$memberId = '';
-$returnDate = '';
-$condition = 'Good';
-$notes = '';
+$pageTitle  = 'Return Book';
+$activePage = 'returnbook';
+$message    = '';
+$msgType    = 'success';
+
+// Form defaults
+$bookId     = '';
+$memberId   = '';
+$returnDate = date('Y-m-d');
+$condition  = 'Good';
+$notes      = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $bookId = isset($_POST['book_id']) ? trim($_POST['book_id']) : '';
-    $memberId = isset($_POST['member_id']) ? trim($_POST['member_id']) : '';
-    $returnDate = isset($_POST['return_date']) ? trim($_POST['return_date']) : '';
-    $condition = isset($_POST['condition']) ? trim($_POST['condition']) : 'Good';
-    $notes = isset($_POST['notes']) ? trim($_POST['notes']) : '';
+    $bookId     = trim($_POST['book_id'] ?? '');
+    $memberId   = trim($_POST['member_id'] ?? '');
+    $returnDate = trim($_POST['return_date'] ?? date('Y-m-d'));
+    $condition  = trim($_POST['book_condition'] ?? 'Good');
+    $notes      = trim($_POST['notes'] ?? '');
 
-    if ($bookId === '') {
-        $message = 'Book ID is required.';
+    if ($bookId === '' || $memberId === '') {
+        $message = 'Book ID and Member ID are required.';
+        $msgType = 'error';
     } else {
-        $stmt = $conn->prepare('SELECT copies_available, copies_total FROM books WHERE id = ?');
-        if ($stmt) {
-            $stmt->bind_param('s', $bookId);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $row = $result ? $result->fetch_assoc() : null;
-            if (!$row) {
-                $message = 'Book not found.';
-            } else {
-                $avail = (int)$row['copies_available'];
-                $total = (int)$row['copies_total'];
-                if (strcasecmp($condition, 'Lost') === 0) {
-                    $message = 'Book marked as lost. Available copies unchanged.';
+        // Find the active borrow record for this book + member
+        $stmt = $conn->prepare(
+            "SELECT id FROM borrows WHERE book_id = ? AND member_id = ? AND status = 'Borrowed' ORDER BY borrow_date ASC LIMIT 1"
+        );
+        $stmt->bind_param('ss', $bookId, $memberId);
+        $stmt->execute();
+        $borrow = $stmt->get_result()->fetch_assoc();
+
+        if (!$borrow) {
+            $message = 'No active borrow record found for this book and member.';
+            $msgType = 'error';
+        } else {
+            // Update the borrow record
+            $returnStatus = 'Returned';
+            $stmt = $conn->prepare('UPDATE borrows SET return_date = ?, book_condition = ?, status = ?, notes = ? WHERE id = ?');
+            $stmt->bind_param('ssssi', $returnDate, $condition, $returnStatus, $notes, $borrow['id']);
+
+            if ($stmt->execute()) {
+                // Restore available copy unless the book is lost
+                if (strcasecmp($condition, 'Lost') !== 0) {
+                    $upd = $conn->prepare('UPDATE books SET copies_available = LEAST(copies_available + 1, copies_total) WHERE id = ?');
+                    $upd->bind_param('s', $bookId);
+                    $upd->execute();
+                    $message = 'Book returned successfully.';
                 } else {
-                    if ($avail >= $total) {
-                        $message = 'All copies are already marked as available.';
-                    } else {
-                        $stmt2 = $conn->prepare('UPDATE books SET copies_available = copies_available + 1 WHERE id = ?');
-                        if ($stmt2) {
-                            $stmt2->bind_param('s', $bookId);
-                            if ($stmt2->execute()) {
-                                $message = 'Book returned. Available copies updated.';
-                            } else {
-                                $message = 'Failed to update book: ' . $conn->error;
-                            }
-                        }
-                    }
+                    $message = 'Book marked as lost. Copies not restored.';
                 }
+                // Clear form after success
+                $bookId = $memberId = $notes = '';
+                $returnDate = date('Y-m-d');
+                $condition  = 'Good';
+            } else {
+                $message = 'Failed to process return: ' . $conn->error;
+                $msgType = 'error';
             }
         }
     }
 }
+
+require_once 'header.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Library of Alexandria</title>
-    <link rel="stylesheet" href="heisenberg.css">
-</head>
-<body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="logo">
-        <img src="pic.jpg" alt="Library logo">
-        <div>
-          <b>Library of Alexandria</b>
-          <div class="subtitle">Loans</div>
-        </div>
-      </div>
 
-      <nav class="nav">
-        <div class="nav-section">OVERVIEW</div>
-        <a href="library.php">Dashboard</a>
-
-        <div class="nav-section">CATALOGUE</div>
-        <a href="book.php">Books</a>
-        <a href="addbook.php">Add Book</a>
-        <a class="active" href="returnbook.php">Return Book</a>
-
-        <div class="nav-section">MEMBERS</div>
-        <a href="members.php">Members</a>
-      </nav>
-
-      <div class="sidebar-footer">
-        <div class="role">Signed in as</div>
-        <div class="name">Admin User</div>
-        <div class="role">Role: Librarian</div>
-      </div>
-    </aside>
-
-    <main class="content">
       <header class="topbar">
         <h1>Return Book</h1>
         <div class="actions">
-          <a class="btn" href="book.php">Books</a>
+          <a class="btn" href="book.php">Back to Books</a>
         </div>
       </header>
 
+      <?php if ($message !== ''): ?>
+        <div class="flash flash-<?php echo $msgType; ?>"><?php echo htmlspecialchars($message); ?></div>
+      <?php endif; ?>
+
       <section class="grid">
         <div class="card span-6">
-          <h2>Return form</h2>
+          <h2>Return Form</h2>
           <form action="returnbook.php" method="post" autocomplete="on">
             <div class="form-grid">
               <div class="field">
@@ -111,28 +89,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               </div>
               <div class="field">
                 <label for="member_id">Member ID</label>
-                <input id="member_id" name="member_id" placeholder="MB-0017" value="<?php echo htmlspecialchars($memberId); ?>">
+                <input id="member_id" name="member_id" placeholder="MB-0017" value="<?php echo htmlspecialchars($memberId); ?>" required>
               </div>
-
               <div class="field">
                 <label for="return_date">Return Date</label>
                 <input id="return_date" name="return_date" type="date" value="<?php echo htmlspecialchars($returnDate); ?>">
               </div>
               <div class="field">
-                <label for="condition">Condition</label>
-                <select id="condition" name="condition">
+                <label for="book_condition">Condition</label>
+                <select id="book_condition" name="book_condition">
                   <option <?php if ($condition === 'Good') echo 'selected'; ?>>Good</option>
                   <option <?php if ($condition === 'Damaged') echo 'selected'; ?>>Damaged</option>
                   <option <?php if ($condition === 'Lost') echo 'selected'; ?>>Lost</option>
                 </select>
               </div>
-
               <div class="field">
                 <label for="notes">Notes</label>
                 <textarea id="notes" name="notes" placeholder="Optional remarks..."><?php echo htmlspecialchars($notes); ?></textarea>
               </div>
             </div>
-
             <div class="form-actions">
               <button class="btn" type="reset">Clear</button>
               <button class="btn primary" type="submit">Confirm Return</button>
@@ -140,7 +115,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </form>
         </div>
       </section>
-    </main>
-  </div>
-</body>
-</html>
+
+<?php require_once 'footer.php'; ?>
