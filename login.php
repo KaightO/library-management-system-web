@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <form action="login.php" method="post" autocomplete="on">
         <div class="field">
           <label for="username">Username</label>
-          <input id="username" name="username" type="text" placeholder="Enter username"
+          <input id="username" name="username" type="text" placeholder="Enter username" 
                  value="<?php echo htmlspecialchars($username); ?>" required autofocus>
         </div>
         <div class="field">

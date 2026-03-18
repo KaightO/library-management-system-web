@@ -62,11 +62,14 @@ ON DUPLICATE KEY UPDATE id = id;
 -- Seed data: sample members
 INSERT INTO members (id, name, status, phone, email)
 VALUES
-  ('MB-0017', 'A. Member', 'Active', '+1 555 0789', 'member@library.test'),
-  ('MB-0031', 'Jordan Reader', 'Pending', '+1 555 0990', 'jordan@library.test')
+  ('MB-0017', 'Keepa ', 'Active', '+977 9876543210', 'kmember@library.test'),
+  ('MB-0031', 'Jordan Reader', 'Pending', '+1 555 0990', 'jordan@library.test'),
+  ('MB-0018','Kiran','Active','+977 9876543218','kiran@library.test')
 ON DUPLICATE KEY UPDATE id = id;
 
 -- Seed data: default admin (username: admin, password: admin123)
 INSERT INTO admins (username, password_hash, name)
 VALUES ('admin', '$2y$12$RVDOkTvnoEkS8DFwSVxtXuYEJBQsfLX6j.QvvNPBRWL8w4kxFITKK', 'Admin User')
 ON DUPLICATE KEY UPDATE id = id;
+
+
